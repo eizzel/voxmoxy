@@ -471,7 +471,7 @@ class Bootstrap extends CApplicationComponent
 	/**
 	 * Required metadata for responsive CSS to work.
 	 */
-	protected function registerMetadataForResponsive()
+	public function registerMetadataForResponsive()
 	{
 		$this->assetsRegistry->registerMetaTag('width=device-width, initial-scale=1.0', 'viewport');
 	}
