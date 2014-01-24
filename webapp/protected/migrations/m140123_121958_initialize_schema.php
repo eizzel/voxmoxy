@@ -76,18 +76,8 @@ class m140123_121958_initialize_schema extends CDbMigration
 		  `categoryId` INT NOT NULL,
 		  PRIMARY KEY (`memberUploadCategoryId`),
 		  INDEX `fk_MemberUploadCategory_MemberUpload1_idx` (`memberUploadId` ASC),
-		  INDEX `fk_MemberUploadCategory_Category1_idx` (`categoryId` ASC),
-		  CONSTRAINT `fk_MemberUploadCategory_MemberUpload1`
-			FOREIGN KEY (`memberUploadId`)
-			REFERENCES `MemberUpload` (`memberUploadId`)
-			ON DELETE NO ACTION
-			ON UPDATE NO ACTION,
-		  CONSTRAINT `fk_MemberUploadCategory_Category1`
-			FOREIGN KEY (`categoryId`)
-			REFERENCES `Category` (`categoryId`)
-			ON DELETE NO ACTION
-			ON UPDATE NO ACTION);
-
+		  INDEX `fk_MemberUploadCategory_Category1_idx` (`categoryId` ASC))
+		ENGINE = MYISAM;
 
 		SET SQL_MODE=@OLD_SQL_MODE;
 		SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

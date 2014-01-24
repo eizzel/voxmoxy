@@ -81,11 +81,11 @@ return array(
 			'urlFormat'=>'path',
             'baseUrl'=>'', // added to fix URL issues under Google App Engine
 			'rules'=>array(
-				'<action:\w+>' => array('default/default/<action>', 'caseSensitive' => false),
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 				'<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',				
+				'<action:\w+>' => array('default/default/<action>', 'caseSensitive' => false),
 			),
 		),
 

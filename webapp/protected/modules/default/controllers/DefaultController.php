@@ -28,8 +28,15 @@ class DefaultController extends Controller
 		);
 		$this->endClip();
 		
+		$model=new MemberUpload('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['MemberUpload']))
+			$model->attributes=$_GET['MemberUpload'];
+
+		$dataSource = $model->search();
+		
 		$this->layout = '//layouts/column2LeftSidebar';
-		$this->render('search');
+		$this->render('search', array('dataSource' => $dataSource));
 	}
 	
 	/**

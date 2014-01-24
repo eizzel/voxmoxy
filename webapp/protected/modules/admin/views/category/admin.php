@@ -40,7 +40,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 </div><!-- search-form -->
 <?php 
 $columns = array(
-		'categoryId',
+		array('name'=>'categoryId', 'header'=>'id'),
 		'categoryName',
 		);
 
