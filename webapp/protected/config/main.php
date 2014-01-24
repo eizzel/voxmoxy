@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * Special var_dump function
+ */
+
+function d($var)
+{
+	echo Yii::trace(CVarDumper::dumpAsString($var), 'vardump');
+}
+
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
@@ -71,9 +81,11 @@ return array(
 			'urlFormat'=>'path',
             'baseUrl'=>'', // added to fix URL issues under Google App Engine
 			'rules'=>array(
+				'<action:\w+>' => array('default/default/<action>', 'caseSensitive' => false),
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+				'<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',				
 			),
 		),
 
@@ -94,6 +106,7 @@ return array(
 			'username' => 'root',
 			'password' => '5c00byd00',
 			'charset' => 'utf8',
+			'enableParamLogging' => true,
 		),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

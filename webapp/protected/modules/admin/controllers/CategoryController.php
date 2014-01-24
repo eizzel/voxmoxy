@@ -60,7 +60,7 @@ class CategoryController extends Controller
 		{
 			$model->attributes=$_POST['Category'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->categoryId));
+				$this->redirect(array('admin','id'=>$model->categoryId));
 		}
 
 		$this->render('create',array(
@@ -84,7 +84,7 @@ class CategoryController extends Controller
 		{
 			$model->attributes=$_POST['Category'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->categoryId));
+				$this->redirect(array('admin','id'=>$model->categoryId));
 		}
 
 		$this->render('update',array(
@@ -111,7 +111,7 @@ class CategoryController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$this->redirect('admin/category/admin');
+		$this->redirect('/admin/category/admin');
 	}
 
 	/**

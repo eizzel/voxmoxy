@@ -7,6 +7,31 @@ class DefaultController extends Controller
 		$this->render('index');
 	}
 	
+	public function actionSearch()
+	{
+		$data = new ClosureTableTree(array(
+				'sourceTable' => Category::model(),
+				'relationTable' => CategoryRelation::model(),
+				'parentField' => 'parentCategoryId',
+				'childField' => 'childCategoryId',
+				'textField' => 'categoryName',
+				));
+		
+		$treeData = $data->getChildren();
+		
+		$this->beginClip('categories');
+		$this->widget(
+			'CTreeView',
+			array('data' => $treeData,
+					//'collapsed' => false,
+					/*'htmlOptions' => array('class'=>'expanded')*/)
+		);
+		$this->endClip();
+		
+		$this->layout = '//layouts/column2LeftSidebar';
+		$this->render('search');
+	}
+	
 	/**
 	 * This is the action to handle external exceptions.
 	 */
