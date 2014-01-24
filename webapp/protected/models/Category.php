@@ -90,6 +90,9 @@ class Category extends Model
 		$criteria->compare('dateCreated',$this->dateCreated,true);
 		$criteria->compare('dateLastModified',$this->dateLastModified,true);
 		$criteria->compare('categoryName',$this->categoryName,true);
+		
+		//remove root category
+		$criteria->addCondition('categoryId <> 1');
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

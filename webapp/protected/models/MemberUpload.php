@@ -16,6 +16,9 @@
  */
 class MemberUpload extends Model
 {
+	public $uploaderName;
+	public $categoryId;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -48,7 +51,7 @@ class MemberUpload extends Model
 			array('dateCreated, dateLastModified', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('memberUploadId, dateCreated, dateLastModified, memberUploadTitle, memberUploadFilePath, memberId', 'safe', 'on'=>'search'),
+			array('memberUploadId, dateCreated, dateLastModified, memberUploadTitle, memberUploadFilePath, memberId, uploaderName, categoryId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,7 +63,7 @@ class MemberUpload extends Model
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'memberUploadCategories' => array(self::HAS_MANY, 'MemberUploadCategory', 'memberUploadId'),
+			'memberUploadCategory' => array(self::HAS_MANY, 'MemberUploadCategory', 'memberUploadId'),
 			'member' => array(self::BELONGS_TO, 'Member', 'memberId'),
 		);
 	}
@@ -97,9 +100,24 @@ class MemberUpload extends Model
 		$criteria->compare('memberUploadTitle',$this->memberUploadTitle,true);
 		$criteria->compare('memberUploadFilePath',$this->memberUploadFilePath,true);
 		$criteria->compare('memberId',$this->memberId);
+		$criteria->compare('member.memberUserName', $this->uploaderName, true);
+		$criteria->compare('memberUploadCategory.categoryId', $this->categoryId);
+		
+		$criteria->with = array('member', 'memberUploadCategory');
+		$criteria->together = true;
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort'=>array(
+				'defaultOrder' => 'hex(t.memberUploadTitle)',
+				'attributes' => array(
+					'member.memberUserName' => array(
+                        'asc' => 'hex(member.memberUserName)',
+                        'desc' => 'hex(member.memberUserName) DESC',
+                    ),
+					'*'),
+				
+			),
 		));
 	}
 }

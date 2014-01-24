@@ -4,8 +4,8 @@ class SearchAudioFileForm extends CFormModel
 	public $attribute;
 	public $searchText;
 	public $attributeList = array(
-		'member.memberUserName'=>'author',
-		'memberUpload.memberUploadTitle'=>'title',
+		'memberUploadTitle'=>'Title',
+		'uploaderName'=>'Uploader',
 	);
 	
 	public function rules()
@@ -18,7 +18,7 @@ class SearchAudioFileForm extends CFormModel
 	 */
 	public function attributeLabels()
 	{
-		return array();
+		return array('attribute' => 'Search By');
 	}
 
 }

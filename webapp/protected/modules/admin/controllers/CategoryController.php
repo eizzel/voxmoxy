@@ -88,6 +88,10 @@ class CategoryController extends Controller
 		if(isset($_POST['Category']))
 		{
 			$model->attributes=$_POST['Category'];
+			if(!$model->parentId)
+			{
+				$model->parentId = 1; //root category
+			}
 			if($model->save())
 				$this->redirect(array('admin','id'=>$model->categoryId));
 		}

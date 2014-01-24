@@ -2,3 +2,9 @@
 {
 	padding-top: 60px;
 }
+
+.form-inline label
+{
+	vertical-align: middle;
+	margin-right: 5px;
+}

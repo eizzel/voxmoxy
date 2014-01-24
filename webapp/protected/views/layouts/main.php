@@ -33,8 +33,8 @@
 				),
 				'
 					<form class="navbar-form pull-right">
-					<input type="text" class="span2">
-					<input type="text" class="span2">
+					<input type="text" class="span2 input-small" placeholder="Email">
+					<input type="password" class="span2 input-small" placeholder="Password">
 					<button type="submit" class="btn">Login</button>
 					</form>
 				'
