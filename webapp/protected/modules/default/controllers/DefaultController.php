@@ -52,4 +52,30 @@ class DefaultController extends Controller
 				$this->render('error', $error);
 		}
 	}
+	
+	public function actionSignup()
+	{
+		$signupForm = new SignUpForm();
+		
+		if($_POST['SignUpForm'])
+		{
+			$signupForm->attributes = $_POST['SignUpForm'];
+			
+			if($signupForm->validate())
+			{
+				//save member data
+				$bCrypt = new bCrypt();
+				
+				$member = new Member();
+				$member->memberUserName = $signupForm->userName;
+				$member->memberFirstName = $signupForm->firstName;
+				$member->memberLastName = $signupForm->lastName;
+				$member->memberPassword = $bCrypt->hash($signupForm->password);
+				
+				$member->save();
+			}
+			
+		}
+		$this->render('signup', array('model' => $signupForm));
+	}
 }
