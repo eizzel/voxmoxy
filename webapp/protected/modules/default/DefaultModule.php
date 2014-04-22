@@ -1,5 +1,4 @@
 <?php
-
 class DefaultModule extends CWebModule
 {
 	public function init()
@@ -12,6 +11,16 @@ class DefaultModule extends CWebModule
 			'default.models.*',
 			'default.components.*',
 		));
+		
+		if(!Yii::app()->user->id)
+		{
+			Yii::app()->setComponents( array(
+			'user'=>array(
+					'class'=>'WebUser',
+					'loginUrl'=>'/login',
+				),
+			),false);
+		}
 	}
 
 	public function beforeControllerAction($controller, $action)

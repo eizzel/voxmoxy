@@ -17,18 +17,26 @@ return array(
 		// uncomment the following to use a MySQL database
 		*/
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=voxmoxy',
+			'connectionString' => ENV_DEV
+                    // local development server connection string
+                    ? 'mysql:host=192.168.56.101;dbname=jabbervox'
+                    // App Engine Cloud SQL connection string
+                    // explanation:
+                    // yii-framework - here is a name of App Engine project
+                    // db - here is the name of Cloud SQL instance
+                    : 'mysql:unix_socket=/cloudsql/jabbervoxdev:jabbervox;charset=utf8',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '5c00byd00',
 			'charset' => 'utf8',
+			'enableParamLogging' => true,
 		),
 		
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
 				array(
-					'class'=>'CFileLogRoute',
+					'class'=>'CDbLogRoute',
 					'levels'=>'error, warning',
 				),
 			),

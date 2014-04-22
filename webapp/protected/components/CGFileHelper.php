@@ -352,9 +352,13 @@ class CGFileHelper
     private static function gCopy($src, $dst)
     {
         $file = basename($dst);
-        $options = [ 'gs' => [ 'Content-Type' => self::getMimeType($file) , 'acl' => 'public-read']];
-        $ctx = stream_context_create($options);
-        copy($src,$dst,$ctx);
+		$contentType = self::getMimeType($file);
+		if(!empty($contentType))
+		{
+			$options = [ 'gs' => [ 'Content-Type' => $contentType , 'acl' => 'public-read']];
+			$ctx = stream_context_create($options);
+			copy($src,$dst,$ctx);
+		}
     }
 
 }

@@ -19,7 +19,7 @@ Yii::setPathOfAlias('assets', realpath(dirname(__FILE__) . '/../../assets'));
 if (strpos(getenv("SERVER_SOFTWARE"), 'Development') === 0) {
     define('ENV_DEV', true); // we are on development machine
 } else {
-    define('ENV_DEV', true); // we are on production server
+    define('ENV_DEV', false); // we are on production server
 }
 
 
@@ -28,10 +28,10 @@ if (strpos(getenv("SERVER_SOFTWARE"), 'Development') === 0) {
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'defaultController' => 'default',
-	'name'=>'VoxMoxy',
+	'name'=>'JabberVox',
 
 	// preloading 'log' component
-	'preload'=>array('log', 'bootstrap'),
+	'preload'=>array('log','bootstrap'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -54,26 +54,40 @@ return array(
 	// application components
 	'components'=>array(
         'assetManager'=>array(
-            // This is special Asset Manger which can work under Google App Engine
+			// This is special Asset Manger which can work under Google App Engine
             'class'=>'application.components.CGAssetManager',
             // CHANGE THIS: Enter here your own Google Cloud Storage bucket name Google App Engine
             'basePath'=>ENV_DEV
                     ? Yii::getPathOfAlias('assets')   // basePath for development version, assets path alias was defined above
-                    : 'gs://yii-assets',    // basePath for production version
+                    : 'gs://jabbervoxdev.appspot.com/assets',    // basePath for production version
             // CHANGE THIS: All files on Google Cloud Storage can be accessed via the URL below,
             // note the bucket name at the end, should be the same as in basePath above
             'baseUrl'=>ENV_DEV
                     ? '/assets'                                            // baseUrl for development App Engine
-                    : 'http://commondatastorage.googleapis.com/yii-assets' // baseUrl for production App Engine
+                    : 'http://commondatastorage.googleapis.com/jabbervoxdev.appspot.com/assets' // baseUrl for production App Engine
 
         ),
+		
         'request'=>array(
             'baseUrl' => '/',
             'scriptUrl' => '/',
         ),
+		
+		'session' => array (
+			'class' => 'system.web.CDbHttpSession',
+			'connectionID' => 'db',
+			'sessionTableName' => 'Sessions',
+		),
+		
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
+			'class'=>'WebUser',
+			'autoUpdateFlash'=>false,
+		),
+		
+		'statePersister'=>array(
+			'class'=>'DbStatePersister',
 		),
 		// uncomment the following to enable URLs in path-format
 
@@ -81,11 +95,17 @@ return array(
 			'urlFormat'=>'path',
             'baseUrl'=>'', // added to fix URL issues under Google App Engine
 			'rules'=>array(
+				'<action:(search|signup|login|logout)>' => array('default/default/<action>', 'caseSensitive' => false),
+				'<action:(confirm)>/code/<c:\w+>/mId/<id:\d+>' => array('default/default/<action>/code/<c>/mId/<id>', 'caseSensitive' => false),
+				
+				'<controller:(dashboard)>' => array('default/dashboard', 'caseSensitive' => false),
+				'<controller:(dashboard)>/<action:\w+>' => array('default/dashboard/<action>', 'caseSensitive' => false),
+				
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 				'<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',				
-				'<action:\w+>' => array('default/default/<action>', 'caseSensitive' => false),
+				
 			),
 		),
 
@@ -96,15 +116,15 @@ return array(
 		'db'=>array(
 			'connectionString' => ENV_DEV
                     // local development server connection string
-                    ? 'mysql:host=localhost;dbname=voxmoxy'
+                    ? 'mysql:host=192.168.56.101;dbname=jabbervox'
                     // App Engine Cloud SQL connection string
                     // explanation:
                     // yii-framework - here is a name of App Engine project
                     // db - here is the name of Cloud SQL instance
-                    : 'mysql:unix_socket=/cloudsql/yii-framework:db;charset=utf8',
+                    : 'mysql:unix_socket=/cloudsql/jabbervoxdev:jabbervox;dbname=Jabbervox;charset=utf8',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '5c00byd00',
+			'password' => ENV_DEV ? '5c00byd00' : '',
 			'charset' => 'utf8',
 			'enableParamLogging' => true,
 		),
@@ -116,8 +136,8 @@ return array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
 				array(
-					'class'=>'CFileLogRoute', // default
-					//'class'=>'CSyslogRoute', // log errors to syslog (supported by Google App Engine)
+					//'class'=>'CFileLogRoute', // default
+					'class'=>'CSyslogRoute', // log errors to syslog (supported by Google App Engine)
 					'levels'=>'error, warning',
 				),
 				// uncomment the following to show log messages on web pages
@@ -133,7 +153,8 @@ return array(
 			'class' => 'ext.bootstrap.components.Bootstrap',
 			//'coreCss' => false,
 			'responsiveCss' => true,
-			'enableCdn' => false,
+			'enableCdn' => true,
+			'_assetsUrl'=>'/assets/bsext', 
 		),
 	),
 

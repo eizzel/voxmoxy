@@ -10,6 +10,12 @@
 				echo $this->clips['categories'];
 			}
 		?>
+		<?php
+			if($this->clips['dashboardNav'])
+			{
+				echo $this->clips['dashboardNav'];
+			}
+		?>
 	</div><!-- sidebar -->
 </div>
 <div class="span10">

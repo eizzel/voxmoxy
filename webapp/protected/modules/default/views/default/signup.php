@@ -17,7 +17,7 @@ $this->pageTitle=Yii::app()->name . ' - Signup';
 			'enableClientValidation'=>true,
 			'enableAjaxValidation'=>true,
 			'clientOptions'=>array(
-				'validateOnSubmit'=>true,
+				//'validateOnSubmit'=>true,
 			),
 		));
 		?>

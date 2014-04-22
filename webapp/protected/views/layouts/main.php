@@ -13,39 +13,68 @@
 </head>
 
 <body class="<?php echo Yii::app()->controller->action->id; ?>">
-	<?php
-	$items = array(
-		'---',
-		array('label' => 'Sign Up', 'url' => array('/default/default/signup'), 'visible' => Yii::app()->user->isGuest),
-		//array('label' => 'Login', 'url' => array('/site/login'), 'visible' => Yii::app()->user->isGuest),
-		);
-	
-	$this->widget(
-		'bootstrap.widgets.TbNavbar',
-		array(
-			'brand' => 'Vox Moxy',
-			//'fixed' => false,
-			'collapse' => true,
-			'items' => array(
-				array(
-					'class' => 'bootstrap.widgets.TbMenu',
-					'items' => $items
-				),
-				'
-					<form class="navbar-form pull-right">
-					<input type="text" class="span2 input-small" placeholder="Email">
-					<input type="password" class="span2 input-small" placeholder="Password">
-					<button type="submit" class="btn">Login</button>
-					</form>
-				'
-			),
-			'htmlOptions' => array('class' => '')
-		)	
-	);
-
-	?>
 	<div id="header">
+		<?php
+		$items = array(
+			'---',
+			array('label' => 'Sign Up', 'url' => array('/default/default/signup'), 'visible' => Yii::app()->user->isGuest),
+			array('label' => 'Dashboard', 'url' => array('/dashboard'), 'visible' => !Yii::app()->user->isGuest),
+			);
 		
+		if(Yii::app()->user->id)
+		{
+			$member = Member::model()->findByPk(Yii::app()->user->id);
+		}
+
+		$this->widget(
+			'bootstrap.widgets.TbNavbar',
+			array(
+				'brand' => '<img src="/img/logo.png" />',
+				//'fixed' => false,
+				'collapse' => true,
+				'items' => array(
+					array(
+						'class' => 'bootstrap.widgets.TbMenu',
+						'items' => $items
+					),
+					
+					'<form class="navbar-search pull-left" method="POST" action ="'.$this->createUrl('/search').'">
+						<input type="text" name="SearchAudioFileForm[searchText]" class="search-query" placeholder="search">
+					</form>',
+					
+					Yii::app()->user->isGuest ?
+					'
+						<form class="navbar-form pull-right" method="POST" action="'.$this->createUrl('/login').'">
+						<input type="text" class="span2 input-small" name="LoginForm[username]" placeholder="Email">
+						<input type="password" class="span2 input-small" name="LoginForm[password]" placeholder="Password">
+						<button type="submit" class="btn">Login</button>
+						</form>
+					'
+					:
+					'
+						<form class="navbar-form pull-right" action="'.$this->createUrl('/logout').'">
+						<span>'.$member->memberEmail.'</span>&nbsp;
+						<button type="submit" class="btn">Logout</button>
+						</form>
+					'
+			
+				),
+				
+			)	
+		);
+
+		foreach (Yii::app()->user->getFlashes() as $key => $message)
+		{
+			$classParts = explode("_", $key);
+			$class = $classParts[0];
+			//show flash messages
+			Yii::app()->clientScript->registerScript($classParts[1],'
+				$(document).ready(function(){
+				$("#header .navbar").notify("'.$message.'",
+					{autoHideDelay: 8000, elementPosition: "bottom center", className: "'.$class.'", arrowSize: 10, gap: 40});			
+				});');
+		}
+		?>
 	</div><!-- header -->
 	<div class="clear"></div>
 

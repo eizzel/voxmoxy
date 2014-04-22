@@ -24,14 +24,14 @@ class SignUpForm extends CFormModel
 	{
 		return array(
 			// required fields
-			array('email, userName, password, passwordConfirm, userAgreement', 'required'),
+			array('email, userName, password, passwordConfirm', 'required'),
 			//email must be valid format
 			array('email', 'email'),
 			// email and username need to be unique
 			array('email', 'unique', 'attributeName'=>'memberEmail', 'caseSensitive'=>'false', 'className'=>'Member'),
 			array('userName', 'unique', 'attributeName'=>'memberUserName', 'caseSensitive'=>'false', 'className'=>'Member'),
 			// password and passwordConfirm must be equal
-			array('password, passwordConfirm', 'authenticate'),
+			array('passwordConfirm', 'authenticate'),
 			// user agreement must be checked
 			array('userAgreement', 'checkUserAgreement'),
 			// all fields are safe to assign
@@ -57,13 +57,13 @@ class SignUpForm extends CFormModel
 	{
 		if($this->password !== $this->passwordConfirm)
 		{
-			$this->addError('password', 'Password and Password Confirm must match.');
+			$this->addError('passwordConfirm', 'Password and Password Confirm must match.');
 		}
 	}
 	
 	public function checkUserAgreement()
 	{
-		if(!$this->userAgreement)
+		if(empty($this->userAgreement))
 		{
 			$this->addError('userAgreement', 'User agreement must be checked.');
 		}
