@@ -41,12 +41,11 @@ class DefaultController extends Controller
 		
 		$model=new MemberUpload('search');
 		$model->unsetAttributes();  // clear any default values
-		d($_GET);
+		
 		if(isset($_GET['SearchAudioFileForm']))
 		{
 			$model->setAttribute($_GET['SearchAudioFileForm']['attribute'], $_GET['SearchAudioFileForm']['searchText']);
 		}
-		d($model);
 		
 		/**
 		* Add treeview behaviour that will filter out org table when a tree label is clicked
@@ -223,7 +222,7 @@ class DefaultController extends Controller
 					$memberMachineData->save();
 					
 				}
-				$this->redirect(Yii::app()->user->returnUrl);
+				$this->redirect('/dashboard');
 			}
 				
 		}

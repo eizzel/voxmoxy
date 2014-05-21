@@ -34,13 +34,13 @@ $('#searchForm').submit(function(){
 <?php 
 $columns = array(
 		array('name'=>'memberUploadTitle', 'header'=>'Title'),
-		array('name'=>'member.memberUserName', 'header'=>'Uploader'),
+		array('name'=>'uploaderName', 'header'=>'Uploader'),
+		array('name'=>'avgRating', 'header'=>'Rating'),
 		);
 
 $this->widget('bootstrap.widgets.TbGridView', array(
 	'id'=>'memberUpload-grid',
 	'dataProvider' => $dataSource,
 	'columns'=>$columns,
-	'type'=>'bordered striped'
 ));
 ?>

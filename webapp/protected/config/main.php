@@ -59,12 +59,12 @@ return array(
             // CHANGE THIS: Enter here your own Google Cloud Storage bucket name Google App Engine
             'basePath'=>ENV_DEV
                     ? Yii::getPathOfAlias('assets')   // basePath for development version, assets path alias was defined above
-                    : 'gs://jabbervoxdev.appspot.com/assets',    // basePath for production version
+                    : 'gs://jabbervox/assets',    // basePath for production version
             // CHANGE THIS: All files on Google Cloud Storage can be accessed via the URL below,
             // note the bucket name at the end, should be the same as in basePath above
             'baseUrl'=>ENV_DEV
                     ? '/assets'                                            // baseUrl for development App Engine
-                    : 'http://commondatastorage.googleapis.com/jabbervoxdev.appspot.com/assets' // baseUrl for production App Engine
+                    : 'http://commondatastorage.googleapis.com/jabbervox/assets' // baseUrl for production App Engine
 
         ),
 		
@@ -116,7 +116,7 @@ return array(
 		'db'=>array(
 			'connectionString' => ENV_DEV
                     // local development server connection string
-                    ? 'mysql:host=192.168.56.101;dbname=jabbervox'
+                    ? 'mysql:host=192.168.56.101;dbname=Jabbervox'
                     // App Engine Cloud SQL connection string
                     // explanation:
                     // yii-framework - here is a name of App Engine project
@@ -153,7 +153,7 @@ return array(
 			'class' => 'ext.bootstrap.components.Bootstrap',
 			//'coreCss' => false,
 			'responsiveCss' => true,
-			'enableCdn' => true,
+			'enableCdn' => false,
 			'_assetsUrl'=>'/assets/bsext', 
 		),
 	),
@@ -163,5 +163,6 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'eizzel.perez@gmail.com',
+		'uploadDirectory'=>ENV_DEV? '/assets/uploads' : 'gs://jabbervax/uploads',
 	),
 );

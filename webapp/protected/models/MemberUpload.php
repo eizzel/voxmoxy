@@ -64,6 +64,7 @@ class MemberUpload extends Model
 		// class name for the relations automatically generated below.
 		return array(
 			'memberUploadCategory' => array(self::HAS_MANY, 'MemberUploadCategory', 'memberUploadId'),
+			'memberUploadRating' => array(self::HAS_MANY, 'MemberUploadRating', 'memberUploadId'),
 			'member' => array(self::BELONGS_TO, 'Member', 'memberId'),
 		);
 	}
@@ -99,12 +100,22 @@ class MemberUpload extends Model
 		$criteria->compare('dateLastModified',$this->dateLastModified,true);
 		$criteria->compare('memberUploadTitle',$this->memberUploadTitle,true);
 		$criteria->compare('memberUploadFilePath',$this->memberUploadFilePath,true);
-		$criteria->compare('memberId',$this->memberId);
+		$criteria->compare('t.memberId',$this->memberId);
 		$criteria->compare('member.memberUserName', $this->uploaderName, true);
 		$criteria->compare('memberUploadCategory.categoryId', $this->categoryId);
 		
-		$criteria->with = array('member', 'memberUploadCategory');
+		$criteria->with = array('member', 'memberUploadCategory', 'memberUploadRating');
+		$criteria->group = 't.memberUploadId';
 		$criteria->together = true;
+		
+		
+		//select only columns we need
+		
+		$criteria->select = array(
+			't.*',
+			'member.memberUserName as uploaderName',
+			'avg(memberUploadRating.memberUploadRatingValue) AS avgRating',
+			);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
