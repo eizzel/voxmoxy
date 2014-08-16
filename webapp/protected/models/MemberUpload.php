@@ -17,6 +17,7 @@
 class MemberUpload extends Model
 {
 	public $uploaderName;
+	public $rating;
 	public $categoryId;
 	
 	/**
@@ -114,7 +115,7 @@ class MemberUpload extends Model
 		$criteria->select = array(
 			't.*',
 			'member.memberUserName as uploaderName',
-			'avg(memberUploadRating.memberUploadRatingValue) AS avgRating',
+			'avg(memberUploadRating.memberUploadRatingValue) AS rating',
 			);
 
 		return new CActiveDataProvider($this, array(
@@ -122,13 +123,46 @@ class MemberUpload extends Model
 			'sort'=>array(
 				'defaultOrder' => 'hex(t.memberUploadTitle)',
 				'attributes' => array(
-					'member.memberUserName' => array(
+					'*',
+					'uploaderName' => array(
                         'asc' => 'hex(member.memberUserName)',
                         'desc' => 'hex(member.memberUserName) DESC',
                     ),
-					'*'),
+					'rating' => array(
+						'asc' => 'avg(memberUploadRating.memberUploadRatingValue)',
+						'desc' => 'avg(memberUploadRating.memberUploadRatingValue) DESC',
+					)
+					),
 				
 			),
 		));
 	}
+	
+	public function getRating()
+	{
+		if($this->rating === null)
+		{
+			$sql = "SELECT ROUND(AVG(memberUploadRatingValue)) FROM MemberUploadRating "
+				. "WHERE memberUploadId = :id";
+		
+			$command = Yii::app()->db->createCommand($sql);
+			$this->rating = $command->queryScalar(array(':id' => $this->memberUploadId));
+		}
+		return $this->rating;
+	}
+	
+	public function afterFind()
+	{
+		if($this->rating === null)
+		{
+			$sql = "SELECT ROUND(AVG(memberUploadRatingValue)) FROM MemberUploadRating "
+				. "WHERE memberUploadId = :id";
+		
+			$command = Yii::app()->db->createCommand($sql);
+			$this->rating = $command->queryScalar(array(':id' => $this->memberUploadId));
+		}
+		
+		return parent::afterFind();
+	}
+	
 }

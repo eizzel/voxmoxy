@@ -37,14 +37,19 @@ $this->renderPartial('dashboardNav');
 
 <?php
 $columns = array(
-array('name'=>'memberUploadTitle', 'header'=>'Title'),
+array('name'=>'memberUploadTitle', 'header'=>'Title', 'value'=>'"<a href=\"".(Yii::app()->controller->createUrl("/view/{$data->memberUploadId}"))."\">".$data->memberUploadTitle."</a>"', 'type' => 'raw'),
 array('name'=>'memberUploadAuthor', 'header'=>'Author'),
 array('name'=>'memberUploadDescription', 'header'=>'Description'),
-array('name'=>'avgRating', 'header'=>'Rating'),
+array('name'=>'rating', 'header'=>'Rating', 'class' => 'ext.dzRaty.DzRatyDataColumn',	// #2 - Add a jQuery Raty data column
+				'options' => array(				//      Custom options for jQuery Raty data column
+					'space' => FALSE
+					),
+			),
 );
 
 $this->widget('bootstrap.widgets.TbGridView', array(
 	'id'=>'memberUpload-grid',
+	'afterAjaxUpdate' => 'js:function() { dzRatyUpdate(); }',
 	'dataProvider' => $uploadList,
 	'columns'=>$columns,
 ));

@@ -100,6 +100,7 @@ return array(
 				
 				'<controller:(dashboard)>' => array('default/dashboard', 'caseSensitive' => false),
 				'<controller:(dashboard)>/<action:\w+>' => array('default/dashboard/<action>', 'caseSensitive' => false),
+				'<action:(view)>/<uploadId:\d+>' => array('default/dashboard/viewUpload/uploadId/<uploadId>'),
 				
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',

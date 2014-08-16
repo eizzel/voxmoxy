@@ -25,7 +25,7 @@ class DashboardController extends Controller
 	{
 		return array(
 			array('allow',  // allow authenticated users
-				'actions'=>array('index', 'myAccount', 'upload'),
+				'actions'=>array('index', 'myAccount', 'upload', 'viewUpload', 'download'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -83,5 +83,77 @@ class DashboardController extends Controller
 	public function actionMyAccount()
 	{
 		$this->render('myAccount', array());
+	}
+	
+	public function actionViewUpload($uploadId)
+	{
+		$memberUpload = MemberUpload::model()->findByPk($uploadId);
+		$ratingForm = new RatingForm();
+		
+		if($memberUpload)
+		{
+			$ratingForm->memberUploadId = $uploadId;
+			
+			if($_POST['RatingForm'])
+			{
+				$ratingForm->attributes = $_POST['RatingForm'];
+				if($ratingForm->validate())
+				{
+					// save rating
+					$memberUploadRating = MemberUploadRating::model()->findByAttributes(array(
+					'memberId' => Yii::app()->user->id,
+					'memberUploadId' => $uploadId,
+					));
+					
+					if(!$memberUploadRating)
+					{
+						$memberUploadRating = new MemberUploadRating();
+						$memberUploadRating->memberId = Yii::app()->user->id;
+						$memberUploadRating->memberUploadId = $uploadId;
+					}
+					$memberUploadRating->memberUploadRatingValue = $ratingForm->rating;
+					$memberUploadRating->memberUploadRatingComments = $ratingForm->comments;
+					
+					$memberUploadRating->save();
+				}
+			}
+			else
+			{
+				$memberUploadRating = MemberUploadRating::model()->findByAttributes(array(
+				'memberId' => Yii::app()->user->id,
+				'memberUploadId' => $uploadId,
+				));
+
+				if($memberUploadRating)
+				{
+					$ratingForm->rating = $memberUploadRating->memberUploadRatingValue;
+					$ratingForm->comments = $memberUploadRating->memberUploadRatingComments;
+				}
+				
+			}
+			
+			
+			$downloadUrl = $this->createUrl('/default/dashboard/download/uploadId/'.$uploadId);
+			$this->render('viewUpload', array(
+				'memberUpload' => $memberUpload, 
+				'downloadUrl' => $downloadUrl,
+				'ratingForm' => $ratingForm));
+		}
+		else 
+		{
+			throw new CHttpException(404,'File not found.');
+		}
+		
+	}
+	
+	public function actionDownload($uploadId)
+	{
+		$memberUpload = MemberUpload::model()->findByPk($uploadId);
+		
+		if($memberUpload)
+		{
+			$options = [ 'save_as' => basename($memberUpload->memberUploadFilePath), 'use_range' => false];
+			CloudStorageTools::serve($memberUpload->memberUploadFilePath, $options);
+		}
 	}
 }

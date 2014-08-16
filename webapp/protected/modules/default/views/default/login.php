@@ -28,4 +28,12 @@ $this->breadcrumbs=array(
 		<?php echo CHtml::submitButton('Login', array('class'=>'btn')); ?>
 	<?php $this->endWidget(); ?>
 	</div><!-- form -->
+	<div class="span2">
+		<center>-- Or --</center>
+	</div>
+	<div class="span4">
+		<div class="well">
+			<a class="btn btn-block btn-primary btn-large" href="<?php echo $this->createUrl('/signup');?>">Sign Up</a>
+		</div>
+	</div>
 </div>
